@@ -65,7 +65,7 @@ void	cmds(int argc, char **argv, char **envp, pid_t *cpid)
 	pipe(pipefd);
 	fd1 = open (argv[1], O_RDONLY);
 	fd2 = open (argv[argc - 1], O_WRONLY);
-	dup2(fd1, STDIN_FILENO);
+	dup2(STDIN_FILENO, fd1);
 	while (++ac < argc - 1)
 	{
 		i = until_space(argv[ac], &cmd);
@@ -78,7 +78,8 @@ void	cmds(int argc, char **argv, char **envp, pid_t *cpid)
 			exit (0);
 		if (*cpid == 0)
 		{
-			dup2(STDOUT_FILENO, pipefd[1]);
+			dup2(pipefd[1], STDOUT_FILENO);
+			dup2(pipefd[0], STDIN_FILENO);
 			i = execve(cmd, arrs.args, envp);
 			printf ("execve ret: %d\n", i);
 			if (i < 0)
