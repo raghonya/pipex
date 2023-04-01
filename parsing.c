@@ -1,28 +1,28 @@
 #include <pipex.h>
 
-int	until_space(char *s, char **new)
+void	until_space(char *s, char **new)
 {
 	int	i;
 	int	k;
 
 	i = 0;
-	while (s[i] != ' ')
+	while (*s == ' ' || *s == '\t' || *s == '\n')
+		s++;
+	while (s[i] != ' ' && s[i] != '\n' && s[i] != '\t')
 		i++;
 	*new = malloc(i + 2);
-	malloc_err(!*new);
+	err_pipe(!*new);
 	(*new)[0] = '/';
 	i = 0;
 	k = 1;
 	while (s[i] != ' ')
 		(*new)[k++] = s[i++];
 	(*new)[k] = 0;
-	return (i + 1);
 }
 
 char	*path_check(char **paths, char *cmd)
 {
 	char	*tmp;
-	int		i;
 
 	while (*paths)
 	{
@@ -55,21 +55,17 @@ void	cmds(int argc, char **argv, char **envp, pid_t *cpid)
 	t_2d	arrs;
 	char	*cmd;
 	int		ac;
-	int		i;
-	int		fd1;
-	int		fd2;
 
 	ac = 1;
 	arrs.paths = paths_finder(envp);
-	malloc_err(!arrs.paths);
+	err_pipe(!arrs.paths);
 	pipe(pipefd);
 	while (++ac < argc - 1)
 	{
-		i = until_space(argv[ac], &cmd);
+		until_space(argv[ac], &cmd);
 		arrs.args = ft_split(argv[ac], ' ');
-		malloc_err(!arrs.args);
+		err_pipe(!arrs.args);
 		cmd = path_check(arrs.paths, cmd);
-		i = -1;
 		*cpid = fork();
 		if (*cpid == -1)
 			exit (0);
@@ -77,38 +73,33 @@ void	cmds(int argc, char **argv, char **envp, pid_t *cpid)
 		{
 			if (ac == 2)
 			{
-				fd1 = open (argv[1], O_RDONLY);
-				malloc_err(fd1 == -1);
-				dup2(fd1, STDIN_FILENO);
+				err_pipe(dup2(open (argv[1], O_RDONLY)\
+					, STDIN_FILENO) == -1);
 				dup2(pipefd[1], STDOUT_FILENO);
 			}
 			else if (ac == argc - 2)
 			{
-				fd2 = open (argv[argc - 1], O_WRONLY);
-				malloc_err(fd2 == -1);
 				dup2(pipefd[0], STDIN_FILENO);
-				dup2(fd2, STDOUT_FILENO);
+				err_pipe(dup2(open (argv[argc - 1], O_CREAT | O_TRUNC \
+					| O_WRONLY, 0644), STDOUT_FILENO) == -1);
 			}
-			dup2(pipefd[1], STDIN_FILENO);
-			dup2(pipefd[0], STDOUT_FILENO);
-			// dup2(pipefd[0], STDIN_FILENO);
+			else
+			{
+				dup2(pipefd[0], STDIN_FILENO);
+				pipe(pipefd);
+				dup2(pipefd[1], STDOUT_FILENO);
+			}
 			close(pipefd[0]);
 			close(pipefd[1]);
-			close(fd1);
-			close(fd2);
-			i = execve(cmd, arrs.args, envp);
-			printf ("execve ret: %d\n", i);
+			execve(cmd, arrs.args, envp);
 			perror("Command not found\n");
 			exit (0);
 		}
-		i = -1;
-		while (arrs.args[++i])
-			free(arrs.args[i]);
-		free(arrs.args);
+		free_2d(arrs.args);
 		free(cmd);
 	}
-	while (arrs.paths[++i])
-		free(arrs.paths[i]);
-	free(arrs.paths);
+	free_2d(arrs.paths);
+	close(pipefd[0]);
+	close(pipefd[1]);
 	
 }

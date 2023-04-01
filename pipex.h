@@ -6,6 +6,7 @@
 # include <fcntl.h>
 # include <unistd.h>
 # include <stdio.h>
+# include <sys/wait.h>
 
 typedef struct s_2d
 {
@@ -14,6 +15,7 @@ typedef struct s_2d
 }	t_2d;
 
 void	cmds(int argc, char **argv, char **envp, pid_t *cpid);
-void	malloc_err(int a);
+void	err_pipe(int a);
+void	free_2d(char **s);
 
 #endif
