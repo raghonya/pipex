@@ -35,6 +35,7 @@ char	*path_check(char **paths, char *cmd)
 		free(tmp);
 		paths++;
 	}
+	free (cmd);
 	return  (NULL);
 }
 
