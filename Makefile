@@ -27,10 +27,10 @@ endif
 all: libs $(NAME)
 
 %.o: %.c $(DEP)
-	$(CC) $(CFLAGS) $(IFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) $(f) $(IFLAGS) -c $< -o $@
 
 $(NAME): $(OBJS)
-	$(CC) $(OBJS) $(CFLAGS) $(IFLAGS) $(LFLAGS) -o $(NAME)
+	$(CC) $(OBJS) $(CFLAGS) $(f) $(IFLAGS) $(LFLAGS) -o $(NAME)
 
 clean: libs
 	rm -f *.o
