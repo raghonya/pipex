@@ -63,9 +63,7 @@ void	cmds(int argc, char **argv, char **envp, pid_t *cpid)
 	arrs.paths = paths_finder(envp);
 	malloc_err(!arrs.paths);
 	pipe(pipefd);
-	fd1 = open (argv[1], O_RDONLY);
-	fd2 = open (argv[argc - 1], O_WRONLY);
-	dup2(STDIN_FILENO, fd1);
+	// dup2(STDIN_FILENO, fd1);
 	while (++ac < argc - 1)
 	{
 		i = until_space(argv[ac], &cmd);
@@ -78,8 +76,25 @@ void	cmds(int argc, char **argv, char **envp, pid_t *cpid)
 			exit (0);
 		if (*cpid == 0)
 		{
-			dup2(pipefd[1], STDOUT_FILENO);
-			dup2(pipefd[0], STDIN_FILENO);
+			if (ac == 2)
+			{
+				fd1 = open (argv[1], O_RDONLY);
+				malloc_err(fd1 == -1);
+				dup2(fd1, STDIN_FILENO);
+				dup2(pipefd[1], STDOUT_FILENO);
+			}
+			else if (ac == argc - 2)
+			{
+				fd2 = open (argv[argc - 1], O_WRONLY);
+				malloc_err(fd2 == -1);
+				dup2(pipefd[0], STDIN_FILENO);
+				dup2(fd2, STDOUT_FILENO);
+			}
+			// dup2(pipefd[0], STDIN_FILENO);
+			close(pipefd[0]);
+			close(pipefd[1]);
+			close(fd1);
+			close(fd2);
 			i = execve(cmd, arrs.args, envp);
 			printf ("execve ret: %d\n", i);
 			if (i < 0)

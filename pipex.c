@@ -25,10 +25,6 @@ int main(int argc, char **argv, char **envp)
 
 	if (argc < 5)
 		return (0);
-	// while (argc - 1)
-	// 	printf ("%s\n", argv[argc-- - 1]);
-	if (access(argv[1], R_OK) == -1 || access(argv[argc - 1], W_OK) == -1)
-		exit(0);
 	cmds(argc, argv, envp, &cpid);
 	if (cpid != 0)
 		wait(NULL);
