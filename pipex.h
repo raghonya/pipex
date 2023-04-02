@@ -14,8 +14,19 @@ typedef struct s_2d
 	char	**args;
 }	t_2d;
 
-void	cmds(int argc, char **argv, char **envp, pid_t *cpid);
+typedef struct s_args
+{
+	int		argc;
+	char	**argv;
+	char	**envp;
+}	t_args;
+
+void	pipes(t_args arg, char **paths);
 void	err_pipe(int a);
 void	free_2d(char **s);
+int		until_space(char *s, char **new);
+char	*path_check(char **paths, char *cmd);
+char	**paths_finder(char **envp);
+void	here_doc(t_args arg, char **paths);
 
 #endif

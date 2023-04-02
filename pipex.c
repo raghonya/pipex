@@ -21,13 +21,22 @@ void	err_pipe(int a)
 
 int main(int argc, char **argv, char **envp)
 {
-	pid_t	cpid;
+	char	**paths;
+	t_args	arg;
 
+	arg.argc = argc;
+	arg.argv = argv;
+	arg.envp = envp;
 	if (argc < 5)
 		return (0);
-	cmds(argc, argv, envp, &cpid);
-	//if (cpid != 0)
+	paths = paths_finder(envp);
+	err_pipe(!paths);
+	if (argc > 5 && !ft_strncmp(argv[1], "here_doc", ft_strlen(argv[1])))
+		here_doc(arg, paths);
+	else
+		pipes(arg, paths);
 	while (wait(NULL) != -1)
 		;
+	//free_2d(paths);
 	return (0);
 }

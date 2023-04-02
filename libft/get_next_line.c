@@ -39,7 +39,7 @@ static char	*ft_substr(char const *s, unsigned int start)
 	if (!s)
 		return (NULL);
 	if (!ft_strchr(s, '\n'))
-		len = ft_strlen(s);
+		len = gnl_strlen(s);
 	else
 	{
 		while (s[len] != '\n')
@@ -71,10 +71,10 @@ static char	*read_func(int fd, char *line)
 		}
 		buf[read_size] = 0;
 		if (!line)
-			tmp = ft_strdup (buf);
+			tmp = gnl_strdup (buf);
 		else
 		{
-			tmp = ft_strjoin(line, buf);
+			tmp = gnl_strjoin(line, buf);
 			free(line);
 		}
 		line = tmp;
@@ -96,9 +96,9 @@ char	*get_next_line(int fd)
 	if (!line)
 		return (NULL);
 	ret = ft_substr(line, 0);
-	tmp = ft_strdup(line + (ft_strlen(ret)));
+	tmp = gnl_strdup(line + (gnl_strlen(ret)));
 	free(line);
-	line = ft_strdup(tmp);
+	line = gnl_strdup(tmp);
 	free(tmp);
 	if (!ft_strchr(ret, '\n'))
 	{

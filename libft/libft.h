@@ -14,6 +14,7 @@
 # define LIBFT_H
 # include <stdlib.h>
 # include <stdint.h>
+# include "get_next_line.h"
 # include <unistd.h>
 # include <fcntl.h>
 # include <limits.h>
