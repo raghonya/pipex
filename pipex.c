@@ -14,11 +14,10 @@ void	err_pipe(int a)
 {
 	if (a)
 	{
-		perror("");
+		perror("Error\n");
 		exit(1);
 	}
 }
-
 
 int main(int argc, char **argv, char **envp)
 {

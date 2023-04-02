@@ -15,7 +15,7 @@ void	until_space(char *s, char **new)
 	(*new)[0] = '/';
 	i = 0;
 	k = 1;
-	while (s[i] != ' ')
+	while (s[i] && s[i] != ' ')
 		(*new)[k++] = s[i++];
 	(*new)[k] = 0;
 }
@@ -50,6 +50,32 @@ char	**paths_finder(char **envp)
 	return (ft_split(*envp, ':'));
 }
 
+void	to_direct(int argc, char **argv, int ac, int (*pipefd)[2])
+{
+	if (ac == 2)
+	{
+		err_pipe(dup2(open (argv[1], O_RDONLY)\
+			, STDIN_FILENO) == -1);
+		dup2((*pipefd)[1], STDOUT_FILENO);
+	}
+	else if (ac == argc - 2)
+	{
+		dup2((*pipefd)[0], STDIN_FILENO);
+		err_pipe(dup2(open (argv[argc - 1], O_CREAT | O_TRUNC \
+			| O_WRONLY, 0644), STDOUT_FILENO) == -1);
+	}
+	else
+	{
+		dup2((*pipefd)[0], STDIN_FILENO);
+		close ((*pipefd)[0]);
+		close ((*pipefd)[1]);
+		pipe((*pipefd));
+		dup2((*pipefd)[1], STDOUT_FILENO);
+	}
+	close((*pipefd)[0]);
+	close((*pipefd)[1]);
+}
+
 void	cmds(int argc, char **argv, char **envp, pid_t *cpid)
 {
 	int		pipefd[2];
@@ -68,32 +94,12 @@ void	cmds(int argc, char **argv, char **envp, pid_t *cpid)
 		err_pipe(!arrs.args);
 		cmd = path_check(arrs.paths, cmd);
 		*cpid = fork();
-		if (*cpid == -1)
-			exit (0);
+		err_pipe(*cpid == -1);
 		if (*cpid == 0)
 		{
-			if (ac == 2)
-			{
-				err_pipe(dup2(open (argv[1], O_RDONLY)\
-					, STDIN_FILENO) == -1);
-				dup2(pipefd[1], STDOUT_FILENO);
-			}
-			else if (ac == argc - 2)
-			{
-				dup2(pipefd[0], STDIN_FILENO);
-				err_pipe(dup2(open (argv[argc - 1], O_CREAT | O_TRUNC \
-					| O_WRONLY, 0644), STDOUT_FILENO) == -1);
-			}
-			else
-			{
-				dup2(pipefd[0], STDIN_FILENO);
-				pipe(pipefd);
-				dup2(pipefd[1], STDOUT_FILENO);
-			}
-			close(pipefd[0]);
-			close(pipefd[1]);
+			to_direct(argc, argv, ac, &pipefd);
 			execve(cmd, arrs.args, envp);
-			perror("Command not found\n");
+			ft_printf ("Command not found\n");
 			exit (0);
 		}
 		free_2d(arrs.args);
