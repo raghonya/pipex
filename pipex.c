@@ -6,7 +6,8 @@ void	free_2d(char **s)
 
 	i = -1;
 	while (s[++i])
-		free(s[i]);
+		if (s[i])
+			free(s[i]);
 	free(s);
 }
 
@@ -23,7 +24,7 @@ int main(int argc, char **argv, char **envp)
 {
 	char	**paths;
 	t_args	arg;
-	int		len;
+	//int		len;
 
 	arg.argc = argc;
 	arg.argv = argv;
@@ -31,16 +32,16 @@ int main(int argc, char **argv, char **envp)
 	if (argc < 5)
 		return (0);
 	paths = paths_finder(envp);
-	err_pipe(!paths);
-	len = ft_strlen(argv[1]);
-	if (ft_strlen(argv[1]) < 8 )
-		len = 8;
-	if (argc > 5 && !ft_strncmp(argv[1], "here_doc", len))
-		here_doc(arg, paths);
-	else
+	err_pipe(!paths || !*paths);
+	//len = ft_strlen(argv[1]);
+	//if (ft_strlen(argv[1]) < 8)
+		//len = 8;
+	//if (argc > 5 && !ft_strncmp(argv[1], "here_doc", len))
+	//	here_doc(arg, paths);
+	//else
 		pipes(arg, paths);
 	while (wait(NULL) != -1)
 		;
-	//free_2d(paths);
+	free_2d(paths);
 	return (0);
 }
