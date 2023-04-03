@@ -52,7 +52,7 @@ int	check_perc(int i, const char *s, va_list *a, unsigned int *count)
 	else if (s[i + 1] == 's')
 		printf_putstr_fd (va_arg(*a, char *), STDOUT_FILENO, count);
 	else if (s[i + 1] == 'i' || s[i + 1] == 'd')
-		printf_putnbr_fd (va_arg(*a, int), STDOUT_FILENO, count);
+		printf_putnbr_fd (va_arg(*a, int), STDERR_FILENO, count);
 	else if (s[i + 1] == 'u')
 		putuint (va_arg(*a, unsigned int), count);
 	else if (s[i + 1] == 'x')
@@ -81,7 +81,7 @@ int	ft_printf(const char *s, ...)
 			i++;
 		else
 		{
-			printf_putchar_fd (s[i], 1);
+			printf_putchar_fd (s[i], 2);
 			count++;
 		}
 		i++;
