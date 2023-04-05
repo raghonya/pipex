@@ -22,7 +22,7 @@ void	to_direct_heredoc(t_args arg, int ac, int *p)
 	{
 		err_pipe(dup2(p[(ac - 3) * 2], STDIN_FILENO) == -1);
 		err_pipe(dup2(open (arg.argv[arg.argc - 1], O_CREAT \
-			| O_TRUNC | O_WRONLY, 0644), STDOUT_FILENO) == -1);
+			| O_APPEND | O_WRONLY, 0644), STDOUT_FILENO) == -1);
 	}
 	else
 	{
