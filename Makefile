@@ -2,7 +2,7 @@ NAME	=	pipex
 
 CFLAGS	=	-Wall -Wextra -Werror
 
-f		=	-fsanitize=address -g
+f		=	#-fsanitize=address -g
 
 DEP		=	Makefile pipex.h
 

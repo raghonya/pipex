@@ -13,9 +13,14 @@ void	free_2d(char **s)
 
 void	err_pipe(int a)
 {
+	// int	i;
+
+	// i = -1;
 	if (a)
 	{
-		perror("Error\n");
+		// while (++i < (arg.argc - 4) * 2)
+		// 	close(pipefd[i]);
+		perror("Error");
 		exit(1);
 	}
 }
@@ -43,5 +48,6 @@ int main(int argc, char **argv, char **envp)
 	while (wait(NULL) != -1)
 		;
 	free_2d(paths);
+	// system("leaks pipex");
 	return (0);
 }

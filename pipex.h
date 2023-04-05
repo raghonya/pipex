@@ -8,12 +8,6 @@
 # include <stdio.h>
 # include <sys/wait.h>
 
-typedef struct s_2d
-{
-	char	**paths;
-	char	**args;
-}	t_2d;
-
 typedef struct s_args
 {
 	int		argc;
