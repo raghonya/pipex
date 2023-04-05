@@ -1,92 +1,103 @@
 #include <pipex.h>
 
+// argc = 9, 5 cmd, 5 pipe
+// here_doc, LIMITER, -out file, -exec name ==> -4
+//ac = 3 in p[0], out p[3]
+//ac = 7 in p[8], out b
+//ac = 4, 5, 6
 
-//void	to_direct_heredoc(t_args arg, int ac, int *(pipefd[2]))
-//{
-//	if (ac == 3)
-//	{
+void	to_direct_heredoc(t_args arg, int ac, int *p)
+{
+	int	i;
 
-//		dup2((*pipefd)[2], STDIN_FILENO);
-		
-//		dup2((*pipefd)[1], STDOUT_FILENO);
-//	}
-//	else if (ac == arg.argc - 2)
-//	{
-//		dup2((*pipefd)[0], STDIN_FILENO);
-//		err_pipe(dup2(open (arg.argv[arg.argc - 1], O_CREAT | O_APPEND | O_WRONLY, 0644), STDOUT_FILENO) == -1);
-//	}
-//	else
-//	{
-//		dup2((*pipefd)[0], STDIN_FILENO);
-//		close ((*pipefd)[0]);
-//		close ((*pipefd)[1]);
-//		pipe((*pipefd));
-//		dup2((*pipefd)[1], STDOUT_FILENO);
-//	}
-//	close((*pipefd)[0]);
-//	close((*pipefd)[1]);
-//}
+	i = -1;
+	// ac = 3 ... 7
+	// pipes: 0 1, 2 3, 4 5, 6 7, 8 9
+	if (ac == 3)
+	{
+		err_pipe(dup2(p[0], STDIN_FILENO) == -1);
+		err_pipe(dup2(p[ac], STDOUT_FILENO) == -1);
+	}
+	else if (ac == arg.argc - 2)
+	{
+		err_pipe(dup2(p[(ac - 3) * 2], STDIN_FILENO) == -1);
+		err_pipe(dup2(open (arg.argv[arg.argc - 1], O_CREAT \
+			| O_TRUNC | O_WRONLY, 0644), STDOUT_FILENO) == -1);
+	}
+	else
+	{
+		err_pipe(dup2(p[(ac - 3) * 2], STDIN_FILENO) == -1);
+		err_pipe(dup2(p[(ac - 3) * 2 + 3], STDOUT_FILENO) == -1);
+	}
+	while (++i < (arg.argc - 4) * 2)
+		close(p[i]);
+	free(p);
+}
+// p = ([0] [1]) ([2] [3]) ([4] [5]) ([6] [7]) ([8] [9])
+//      rd  wr    rd  wr    rd   wr   rd   wr
+// ac = 3, kardum a p[0], talis p[3]
+// ac = 4, kardum a p[2], talis p[5]
+// ac = 5, kardum a p[4], talis p[7]
+// ac = 6, kardum a p[6], talis p[9]
+// ac = 7, kardum a p[8], talis fd(b)
+// i = (ac - 3) * 2  ==> kardum a p[i], talis p[i + 3]
 
-//void	childs_heredoc(t_args arg, char *cmd, int ac, int pipefd[2])
-//{
-//	char	**args;
-//	pid_t	cpid;
+void	childs_heredoc(t_args arg, char **paths, int ac, int *p)
+{
+	char	**args;
+	char	*tmp;
+	pid_t	cpid;
 	
-//	args = ft_split(arg.argv[ac], ' ');
-//	err_pipe(!args);
-//	cpid = fork();
-//	err_pipe(cpid == -1);
-//	if (cpid == 0)
-//	{
-//		to_direct_heredoc(arg, ac, &pipefd);
-//		execve(cmd, args, arg.envp);
-//		ft_putstr_fd ("Command not found\n", STDERR_FILENO);
-//	}
-//	free_2d(args);
+	args = ft_split(arg.argv[ac], ' ');
+	err_pipe(!args);
+	if (*args && **args != '/')
+	{
+		tmp = ft_strjoin("/", *args);
+		free(*args);
+		*args = path_check(paths, tmp);
+	}
+	cpid = fork();
+	err_pipe(cpid == -1);
+	if (cpid == 0)
+	{
+		to_direct_heredoc(arg, ac, p);
+		execve(*args, args, arg.envp);
+		ft_putstr_fd ("Command not found\n", STDERR_FILENO);
+		exit (1);
+	}
+	free_2d(args);
+}
 
-//}
 
-//void	here_doc(t_args arg, char **paths)
-//{
-//	int		pipefd[4];
-//	char	*limiter;
-//	char	*line;
-//	char	*cmd;
-//	int		out_fd;
-//	int ac = 2;
+void	here_doc(t_args arg, char **paths)
+{
+	char	*limiter;
+	int		*pipefd;
+	char	*line;
+	int		ac;
+	int		i;
 
-//	pipefd[2] = open("tmpfile.pipex", O_CREAT | O_TRUNC | O_RDWR, 0644);
-//	pipe(pipefd);
-//	limiter = ft_strjoin(arg.argv[2], "\n");
-
-//	err_pipe(dup2(STDOUT_FILENO, pipefd[3]) == -1);
-//	err_pipe(dup2(pipefd[2], STDOUT_FILENO) == -1);
-	
-//	line = get_next_line(0);
-//	while (ft_strncmp(line, limiter, ft_strlen(line)))
-//	{
-//		ft_printf ("%s", line);
-//		free(line);
-//		line = get_next_line(0);
-//	}
-
-//	err_pipe(dup2(STDOUT_FILENO, pipefd[3]) == -1);
-//	while (++ac < arg.argc - 1)
-//	{
-//		if (!until_space(arg.argv[ac], &cmd))
-//			cmd = path_check(paths, cmd);
-//		write (pipefd[3], cmd, ft_strlen(cmd));
-//		childs_heredoc(arg, cmd, ac, pipefd);
-//		free(cmd);
-//	}
-
-//	close(pipefd[0]);
-//	close(pipefd[1]);
-//	close(pipefd[2]);
-//	close(pipefd[3]);
-//	free(line);
-//	free(limiter);
-//}
+	pipefd = malloc(sizeof(int) * (arg.argc - 4) * 2);
+	err_pipe(!pipefd);
+	i = -1;
+	while (++i < arg.argc - 4)
+		err_pipe(pipe(pipefd + (i * 2)) == -1);
+	limiter = ft_strjoin(arg.argv[2], "\n");
+	line = get_next_line(0);
+	while (line && ft_strcmp(line, limiter))
+	{
+		write (pipefd[1], line, ft_strlen(line));
+		free(line);
+		line = get_next_line(0);
+	}
+	ac = 2;
+	while (++ac < arg.argc - 1)
+		childs_heredoc(arg, paths, ac, pipefd);
+	i = -1;
+	while (++i < (arg.argc - 4) * 2)
+		close(pipefd[i]);
+	free(pipefd);
+}
 
 //./pipex here_doc LIMITER cmd cmd1 file
 

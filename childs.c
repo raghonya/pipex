@@ -60,27 +60,6 @@ void	to_direct(t_args arg, int ac, int *p)
 	free(p);
 }
 
-// ac = 3
-// read end
-// 0
-// write end
-// 3
-// ac = 4
-// read end
-// 2
-// write end
-// 5
-// ac = 5
-// read end
-// 4
-// write end
-// 7
-// ac = 6
-// read end
-// 6
-// write end
-// 9
-
 // argc = 8, 5 cmd, 4 pipe
 // -in file, -out file, -exec name ==> -3
 //ac = 2 in a, out p[1]

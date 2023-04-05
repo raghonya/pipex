@@ -37,6 +37,7 @@ fclean: clean
 	rm -f $(NAME)
 
 libs:
+	@echo "Helper libs"
 	@$(MAKE) $(MAKECMDGOALS) -C $(LIB)
 	@$(MAKE) $(MAKECMDGOALS) -C $(PLIB)
 
