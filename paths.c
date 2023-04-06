@@ -23,11 +23,16 @@ char	*path_check(char **paths, char *cmd)
 
 char	**paths_finder(char **envp)
 {
-	while (*envp && ft_strncmp(*envp, "PATH", 4))
-		envp++;
-	if (!*envp)
+	int	i;
+	int	j;
+
+	i = 0;
+	while (envp[i] && ft_strncmp(envp[i], "PATH", 4))
+		i++;
+	if (!envp[i])
 		return (NULL);
-	while (**envp != '/')
-		(*envp)++;
-	return (ft_split(*envp, ':'));
+	j = 0;
+	while (envp[i][j] != '/')
+		j++;
+	return (ft_split(envp[i], ':'));
 }

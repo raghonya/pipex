@@ -68,6 +68,48 @@ void	childs_heredoc(t_args arg, char **paths, int ac, int *p)
 	free_2d(args);
 }
 
+
+//char	*middle_adder(char *dst, char *var, char *src, int index)
+//{
+//	char	*tmp;
+//	char	*tfr;
+//	int		j;
+//	int		i;
+	
+//	i = 0;
+//	j = 0;
+//	tfr = dst;
+//	printf ("'%s','%s'\n", dst, src);
+//	//printf ("%d + %d\n", ft_strlen(dst), ft_strlen(src));
+//	tmp = malloc(ft_strlen(dst) + ft_strlen(src) + 1);
+//	while (i < index)
+//	{
+//		printf ("mti ste\n");
+//		tmp[i++] = *dst++;
+//	}
+//	while (*src)
+//		tmp[i++] = *src++;
+//	while (*dst)
+//		tmp[i++] = *dst++;
+	//printf ("%s\n", tmp);
+
+	//i = 0;
+	//tmp = ft_strdup(dst + index);
+	//dst[index] = 0;
+	//dst = ft_strjoin(dst, src);
+	//src = dst;
+	//dst = ft_strjoin(dst, tmp);
+	//free(tmp);
+	//free(src);
+	//return (dst);
+//	tmp[i] = 0;
+//	printf ("tmp = %s\n", tmp);
+//	free(tfr);
+//	return (tmp);
+//}
+
+// $PATH ara de asinq $PATH meke $SHLVL
+
 char	*after_eq(char *s)
 {
 	while (*s != '=')
@@ -92,56 +134,119 @@ char	*until_eq(char *s)
 	return (ret);
 }
 
-char	*func(char *line, char **env)
+char	*until_whitespc(char *s)
 {
-	char	*s;
-	size_t	len;
+	char	*ret;
 	int		i;
 
-	s = line;
-	line++;
+	i = 0;
+	while (*s != '$')
+		s++;
+	s++;
+	while (s[i] && s[i] != ' ' && s[i] != '\t' && s[i] != '\n')
+		i++;
+	ret = malloc(i + 1);
+	i = 0;
+	while (s[i] && s[i] != ' ' && s[i] != '\t' && s[i] != '\n')
+	{
+		ret[i] = s[i];
+		i++;
+	}
+	ret[i] = 0;
+	return (ret);
+}
+
+char	*vorevefunc(char **to_wr, char *line, int ind, char **env)
+{
+	char	*until_dlr;
+	char	*after_spc;
+	char	*tmp2;
+	char	*tmp;
+	char	*var;
+	int		i;
+
+	until_dlr = ft_substr(line, 0, ind);//malloc
+	var = until_whitespc(line);//malloc
+	after_spc = ft_strdup(line + ind + ft_strlen(var) + 1);//malloc
+	err_pipe(!until_dlr || !var || !after_spc);
 	i = -1;
 	while (env[++i])
 	{
-		s = until_eq(env[i]);
-		len = ft_strlen(line);
-		if (len < ft_strlen(s))
-			len = ft_strlen(s);
-		if (!ft_strncmp(line, s, len))
-			return (after_eq(env[i]));
+		tmp = until_eq(env[i]);
+		err_pipe(!tmp);
+		if (!ft_strcmp(var, tmp))
+		{
+			free(tmp);
+			tmp = ft_strjoin(until_dlr, after_eq(env[i]));
+			tmp2 = tmp;
+			tmp = ft_strjoin(tmp, after_spc);
+			free(tmp2);
+			break ;
+		}
+		free(tmp);
+		tmp = NULL;
 	}
-	line = s;
-	free(s);
-	return (line);
+	if (!tmp)
+		tmp = ft_strjoin(until_dlr, after_spc);
+	free(until_dlr);
+	free(var);
+	free(after_spc);
+	return (tmp);
+}
+
+void	variables(char **to_wr, char *line, char **env)
+{
+	char	*tmp;
+	int		i;
+
+	i = -1;
+	while (line[++i])
+	{
+		if (line[i] == '$')
+		{
+			j += ft_strlen(line + i) + 1;
+			tmp = vorevefunc(to_wr, line, i, env);
+			*to_wr = ft_strjoin(*to_wr, tmp);
+			free(tmp);
+		}
+	}
+	if (!**to_wr)
+		*to_wr = ft_strdup(line);
 }
 
 void	here_doc(t_args arg, char **paths)
 {
+	char	*to_write;
 	char	*limiter;
 	int		*pipefd;
 	char	*line;
 	int		ac;
 	int		i;
 
+	err_pipe(!*arg.argv[2]);
 	pipefd = malloc(sizeof(int) * (arg.argc - 4) * 2);
 	err_pipe(!pipefd);
 	i = -1;
 	while (++i < arg.argc - 4)
 		err_pipe(pipe(pipefd + (i * 2)) == -1);
 	limiter = ft_strjoin(arg.argv[2], "\n");
-	write(1, ">", 1);
-	line = get_next_line(0);
-	while (line && ft_strcmp(line, limiter))
+	line = "";
+	while (1)
 	{
-		if (*line == '$')
-			func(line, arg.envp);
-		write(1, ">", 1);
-		write (pipefd[1], line, ft_strlen(line));
-		free(line);
+		write(1, "heredoc> ", 9);
+		to_write = "";
 		line = get_next_line(0);
+		if (!line || !ft_strcmp(line, limiter))
+		{
+			free(line);
+			free(limiter);
+			break ;
+		}
+		variables(&to_write, line, arg.envp);
+		write (pipefd[1], to_write, ft_strlen(to_write));
+		free(line);
+		free(to_write);
 	}
-	free(line);
-	free(limiter);
 	ac = 2;
 	while (++ac < arg.argc - 1)
 		childs_heredoc(arg, paths, ac, pipefd);
