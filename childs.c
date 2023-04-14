@@ -32,6 +32,8 @@ void	to_direct(t_args arg, int ac, int *p)
 		err_pipe(dup2(p[(ac - 3) * 2], STDIN_FILENO) == -1, p, arg);
 		err_pipe(dup2(p[(ac - 3) * 2 + 3], STDOUT_FILENO) == -1, p, arg);
 	}
+	close(arg.fdin);
+	close(arg.fdout);
 	while (++i < (arg.argc - 4) * 2)
 		close(p[i]);
 	free(p);
@@ -45,7 +47,7 @@ void	childs(t_args arg, char **paths, int ac, int *p)
 
 	args = ft_split(arg.argv[ac], ' ');
 	err_pipe(!args, p, arg);
-	if (*args && **args != '/')
+	if (*args && access(*args, X_OK))
 	{
 		tmp = ft_strjoin("/", *args);
 		free(*args);
@@ -80,5 +82,7 @@ void	pipes(t_args arg, char **paths)
 	i = -1;
 	while (++i < (arg.argc - 4) * 2)
 		close(pipefd[i]);
+	close(arg.fdin);
+	close(arg.fdout);
 	free(pipefd);
 }
