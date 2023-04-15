@@ -34,6 +34,7 @@ void	err_pipe(int a, int *pipes, t_args arg);
 void	free_2d(char **s);
 char	*path_check(char **paths, char *cmd);
 char	**paths_finder(char **envp);
+void	find_absolute_path(char *arg, char **paths);
 void	here_doc(t_args arg, char **paths);
 
 #endif

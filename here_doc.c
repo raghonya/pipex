@@ -175,12 +175,7 @@ void	childs_heredoc(t_args arg, char **paths, int ac, int *p)
 
 	args = ft_split(arg.argv[ac], ' ');
 	err_pipe(!args, p, arg);
-	if (*args && access(*args, X_OK))
-	{
-		tmp = ft_strjoin("/", *args);
-		free(*args);
-		*args = path_check(paths, tmp);
-	}
+	find_absolute_path(*args, paths);
 	cpid = fork();
 	err_pipe(cpid == -1, p, arg);
 	if (cpid == 0)

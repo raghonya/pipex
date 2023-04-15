@@ -12,6 +12,27 @@
 
 #include <pipex.h>
 
+
+void	find_absolute_path(char *arg, char **paths)
+{
+	char	*tmp;
+	int		i;
+
+	i = -1;
+	if (arg)
+	{
+		while (arg[++i])
+			if (arg[i] == '/')
+				break ;
+		if ((size_t)i == ft_strlen(arg))
+		{
+			tmp = ft_strjoin("/", arg);
+			free(arg);
+			arg = path_check(paths, tmp);
+		}
+	}
+}
+
 char	*path_check(char **paths, char *cmd)
 {
 	char	*tmp;
