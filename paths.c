@@ -12,23 +12,22 @@
 
 #include <pipex.h>
 
-
-void	find_absolute_path(char *arg, char **paths)
+void	find_absolute_path(char **args, char **paths)
 {
 	char	*tmp;
 	int		i;
 
 	i = -1;
-	if (arg)
+	if (*args)
 	{
-		while (arg[++i])
-			if (arg[i] == '/')
+		while ((*args)[++i])
+			if ((*args)[i] == '/')
 				break ;
-		if ((size_t)i == ft_strlen(arg))
+		if ((size_t)i == ft_strlen(*args))
 		{
-			tmp = ft_strjoin("/", arg);
-			free(arg);
-			arg = path_check(paths, tmp);
+			tmp = ft_strjoin("/", *args);
+			free(*args);
+			*args = path_check(paths, tmp);
 		}
 	}
 }
