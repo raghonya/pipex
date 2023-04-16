@@ -170,7 +170,6 @@ void	to_direct_heredoc(t_args arg, int ac, int *p)
 void	childs_heredoc(t_args arg, char **paths, int ac, int *p)
 {
 	char	**args;
-	char	*tmp;
 	pid_t	cpid;
 
 	args = ft_split(arg.argv[ac], ' ');

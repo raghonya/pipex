@@ -43,9 +43,7 @@ void	childs(t_args arg, char **paths, int ac, int *p)
 {
 	char	**args;
 	pid_t	cpid;
-	int		i;
 
-	i = -1;
 	args = ft_split(arg.argv[ac], ' ');
 	err_pipe(!args, p, arg);
 	find_absolute_path(*args, paths);
