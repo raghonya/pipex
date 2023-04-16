@@ -81,7 +81,7 @@ int	ft_printf(const char *s, ...)
 			i++;
 		else
 		{
-			printf_putchar_fd (s[i], 1);
+			printf_putchar_fd (s[i], 2);
 			count++;
 		}
 		i++;

@@ -1,31 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   ft_strncmp.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: raghonya <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/29 20:03:43 by raghonya          #+#    #+#             */
-/*   Updated: 2023/01/29 20:03:45 by raghonya         ###   ########.fr       */
+/*   Created: 2023/01/16 16:19:07 by raghonya          #+#    #+#             */
+/*   Updated: 2023/01/16 16:19:08 by raghonya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
-# include <stdlib.h>
-# include <stddef.h>
-# include <unistd.h>
-# include <fcntl.h>
-# include <limits.h>
+#include <stdio.h>
 
-# ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 42
+int	ft_strcmp(char *s1, char *s2)
+{
+	int	i;
 
-# endif
-
-size_t	gnl_strlen(const char *s);
-char	*gnl_strjoin(char const *s1, char const *s2);
-char	*gnl_strdup(const char *s);
-char	*get_next_line(int fd);
-
-#endif
+	i = 0;
+	if (!s1)
+		return (-1);
+	while (s1[i] || s2[i])
+	{
+		if (s1[i] > s2[i])
+			return (1);
+		else if (s1[i] < s2[i])
+			return (-1);
+		i++;
+	}
+	return (0);
+}

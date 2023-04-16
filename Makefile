@@ -1,14 +1,15 @@
 NAME	=	pipex
 
-CFLAGS	=	 -Wall -Wextra -Werror
+CFLAGS	=	-Wall -Wextra -Werror
 
-f		=	-fsanitize=address -g
+f		=	#-fsanitize=address -g
 
 DEP		=	Makefile pipex.h
 
 FILES	=	pipex.c \
-			parsing.c \
-			
+			paths.c \
+			childs.c \
+			here_doc.c 
 
 LIB		=	./libft
 
@@ -19,10 +20,6 @@ IFLAGS	=	-I$(LIB) -I$(PLIB) -I.
 LFLAGS	=	-L$(PLIB) -lftprintf -L$(LIB) -lft
 
 OBJS	=	$(FILES:.c=.o)
-
-ifeq ($(shell uname -s), MINGW64_NT-6.1-7601)
-CC	=	gcc
-endif
 
 all: libs $(NAME)
 
@@ -39,9 +36,10 @@ fclean: clean
 	rm -f $(NAME)
 
 libs:
+	@echo "Helper libs"
 	@$(MAKE) $(MAKECMDGOALS) -C $(LIB)
 	@$(MAKE) $(MAKECMDGOALS) -C $(PLIB)
 
 re:	fclean all
 
-.PHONY: all clean fclean re run_libs
+.PHONY: all clean fclean re libs
