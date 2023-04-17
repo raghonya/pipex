@@ -29,13 +29,20 @@ typedef struct s_args
 	char	**envp;
 }	t_args;
 
-void	pipes(t_args arg, char **paths);
-void	childs(t_args arg, char **paths, int ac, int *p);
-void	err_pipe(int a, int *pipes, t_args arg);
 void	free_2d(char **s);
-char	*path_check(char **paths, char *cmd);
+
+void	to_close(int *pipefd, t_args arg);
+
+void	err_pipe(int a, int *pipes, t_args arg);
+
 char	**paths_finder(char **envp);
+
+char	*path_check(char **paths, char *cmd);
+
 void	find_absolute_path(char **args, char **paths);
+
+void	pipes(t_args arg, char **paths);
+
 void	here_doc(t_args arg, char **paths);
 
 #endif

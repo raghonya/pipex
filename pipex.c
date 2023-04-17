@@ -12,32 +12,6 @@
 
 #include <pipex.h>
 
-void	free_2d(char **s)
-{
-	int	i;
-
-	i = -1;
-	while (s[++i])
-		if (s[i])
-			free(s[i]);
-	free(s);
-}
-
-void	err_pipe(int a, int *pipes, t_args arg)
-{
-	int	i;
-
-	i = -1;
-	if (a)
-	{
-		if (pipes)
-			while (++i < (arg.argc - 4) * 2)
-				close(pipes[i]);
-		perror("Error");
-		exit(1);
-	}
-}
-
 int	main(int argc, char **argv, char **envp)
 {
 	char	**paths;
@@ -50,7 +24,7 @@ int	main(int argc, char **argv, char **envp)
 		return (0);
 	paths = paths_finder(envp);
 	err_pipe(!paths || !*paths, NULL, arg);
-	if (ft_strlen(argv[1]) == 8 && argc > 5 \
+	if (argc > 5 && ft_strlen(argv[1]) == 8 \
 		&& !ft_strncmp(argv[1], "here_doc", 8))
 		here_doc(arg, paths);
 	else

@@ -162,9 +162,7 @@ void	to_direct_heredoc(t_args arg, int ac, int *p)
 		err_pipe(dup2(p[(ac - 3) * 2], STDIN_FILENO) == -1, p, arg);
 		err_pipe(dup2(p[(ac - 3) * 2 + 3], STDOUT_FILENO) == -1, p, arg);
 	}
-	while (++i < (arg.argc - 4) * 2)
-		close(p[i]);
-	free(p);
+	to_close(p, arg);
 }
 
 void	childs_heredoc(t_args arg, char **paths, int ac, int *p)
@@ -180,6 +178,7 @@ void	childs_heredoc(t_args arg, char **paths, int ac, int *p)
 	if (cpid == 0)
 	{
 		to_direct_heredoc(arg, ac, p);
+		free_2d(paths);
 		execve(*args, args, arg.envp);
 		ft_putstr_fd ("Command not found\n", STDERR_FILENO);
 		exit (1);
@@ -198,16 +197,6 @@ void	here_doc_norm(t_args arg, int **pipefd, char **limiter)
 	while (++i < arg.argc - 4)
 		err_pipe(pipe(*pipefd + (i * 2)) == -1, *pipefd, arg);
 	*limiter = ft_strjoin(arg.argv[2], "\n");
-}
-
-void	to_close(int *pipefd, t_args arg)
-{
-	int	i;
-
-	i = -1;
-	while (++i < (arg.argc - 4) * 2)
-		close(pipefd[i]);
-	free(pipefd);
 }
 
 void	here_doc(t_args arg, char **paths)

@@ -34,9 +34,7 @@ void	to_direct(t_args arg, int ac, int *p)
 	}
 	close(arg.fdin);
 	close(arg.fdout);
-	while (++i < (arg.argc - 4) * 2)
-		close(p[i]);
-	free(p);
+	to_close(p, arg);
 }
 
 void	childs(t_args arg, char **paths, int ac, int *p)
@@ -52,6 +50,7 @@ void	childs(t_args arg, char **paths, int ac, int *p)
 	if (cpid == 0)
 	{
 		to_direct(arg, ac, p);
+		free_2d(paths);
 		execve(*args, args, arg.envp);
 		ft_putstr_fd ("Command not found\n", STDERR_FILENO);
 		exit (1);
