@@ -37,6 +37,23 @@ void	to_direct(t_args arg, int ac, int *p)
 	to_close(p, arg);
 }
 
+/*
+
+	argc = 8, 5 cmd, 4 pipe
+	p = ([0] [1]) ([2] [3]) ([4] [5]) ([6] [7])
+		 rd   wr   rd   wr   rd   wr   rd   wr 
+	ac = 2, kardum a fd(a), talis p[1]
+	ac = 3, kardum a p[0] , talis p[3]
+	ac = 4, kardum a p[2] , talis p[5]
+	ac = 5, kardum a p[4] , talis p[7]
+	ac = 7, kardum a p[6] , talis fd(b)
+
+	ac = 2, kardum a fd(a), talis p[ac - 1]
+	ac = [3...argc - 2], i = (ac - 3) * 2  ==>
+	==> kardum a p[i], talis p[i + 3]
+
+*/
+
 void	childs(t_args arg, char **paths, int ac, int *p)
 {
 	char	**args;
