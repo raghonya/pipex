@@ -24,6 +24,12 @@ LFLAGS	=	-L$(PLIB) -lftprintf -L$(LIB) -lft
 
 OBJS	=	$(FILES:.c=.o)
 
+CMD		=	$(MAKECMDGOALS)
+
+ifeq ($(MAKECMDGOALS), bonus)
+	CMD = all
+endif
+
 all: libs $(NAME)
 
 %.o: %.c $(DEP)
@@ -40,8 +46,8 @@ fclean: clean
 
 libs:
 	@echo "Helper libs"
-	@$(MAKE) $(MAKECMDGOALS) -C $(LIB)
-	@$(MAKE) $(MAKECMDGOALS) -C $(PLIB)
+	@$(MAKE) $(CMD) -C $(LIB)
+	@$(MAKE) $(CMD) -C $(PLIB)
 
 re:	fclean all
 
