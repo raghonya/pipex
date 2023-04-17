@@ -29,6 +29,13 @@ typedef struct s_args
 	char	**envp;
 }	t_args;
 
+typedef struct s_strs
+{
+	char	*until_dlr;
+	char	*tmp;
+	char	*to_free;
+}	t_strs;
+
 void	free_2d(char **s);
 
 void	to_close(int *pipefd, t_args arg);
@@ -44,5 +51,13 @@ void	find_absolute_path(char **args, char **paths);
 void	pipes(t_args arg, char **paths);
 
 void	here_doc(t_args arg, char **paths);
+
+char	*expand(char *line, t_args arg);
+
+char	*strjoin_w_free(char*s1, char *s2);
+
+char	*until_whitespc(char *s);
+
+char	*check_env(char *line, char **env);
 
 #endif

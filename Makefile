@@ -10,7 +10,9 @@ FILES	=	pipex.c \
 			paths.c \
 			childs.c \
 			here_doc.c \
-			close_and_free.c 
+			close_and_free.c \
+			expand.c \
+			expand_funcs.c 
 
 LIB		=	./libft
 
