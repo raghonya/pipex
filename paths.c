@@ -12,24 +12,20 @@
 
 #include <pipex.h>
 
-void	find_absolute_path(char **args, char **paths)
+char	**paths_finder(char **envp)
 {
-	char	*tmp;
-	int		i;
+	int	i;
+	int	j;
 
-	i = -1;
-	if (*args)
-	{
-		while ((*args)[++i])
-			if ((*args)[i] == '/')
-				break ;
-		if ((size_t)i == ft_strlen(*args))
-		{
-			tmp = ft_strjoin("/", *args);
-			free(*args);
-			*args = path_check(paths, tmp);
-		}
-	}
+	i = 0;
+	while (envp[i] && ft_strncmp(envp[i], "PATH=", 5))
+		i++;
+	if (!envp[i])
+		return (NULL);
+	j = 0;
+	while (envp[i][j] != '/')
+		j++;
+	return (ft_split(envp[i], ':'));
 }
 
 char	*path_check(char **paths, char *cmd)
@@ -53,18 +49,22 @@ char	*path_check(char **paths, char *cmd)
 	return (NULL);
 }
 
-char	**paths_finder(char **envp)
+void	find_absolute_path(char **args, char **paths)
 {
-	int	i;
-	int	j;
+	char	*tmp;
+	int		i;
 
-	i = 0;
-	while (envp[i] && ft_strncmp(envp[i], "PATH=", 5))
-		i++;
-	if (!envp[i])
-		return (NULL);
-	j = 0;
-	while (envp[i][j] != '/')
-		j++;
-	return (ft_split(envp[i], ':'));
+	i = -1;
+	if (*args)
+	{
+		while ((*args)[++i])
+			if ((*args)[i] == '/')
+				break ;
+		if ((size_t)i == ft_strlen(*args))
+		{
+			tmp = ft_strjoin("/", *args);
+			free(*args);
+			*args = path_check(paths, tmp);
+		}
+	}
 }
