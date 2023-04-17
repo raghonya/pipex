@@ -87,9 +87,6 @@
 
 void	to_direct_heredoc(t_args arg, int ac, int *p)
 {
-	int	i;
-
-	i = -1;
 	if (ac == 3)
 	{
 		err_pipe(dup2(p[0], STDIN_FILENO) == -1, p, arg);
@@ -122,7 +119,6 @@ void	childs_heredoc(t_args arg, char **paths, int ac, int *p)
 	if (cpid == 0)
 	{
 		to_direct_heredoc(arg, ac, p);
-		free_2d(paths);
 		execve(*args, args, arg.envp);
 		ft_putstr_fd ("Command not found\n", STDERR_FILENO);
 		exit (1);
@@ -145,10 +141,13 @@ void	here_doc_norm(t_args arg, int **pipefd, char **limiter)
 
 char	*after_eq(char *s)
 {
-	while (*s != '=')
-		s++;
-	s++;
-	return (s);
+	int	i;
+
+	i = 0;
+	while (s[i] != '=')
+		i++;
+	i++;
+	return (s + i);
 }
 
 char	*until_whitespc(char *s)
@@ -161,11 +160,11 @@ char	*until_whitespc(char *s)
 	// while (s[i] != '$')
 	// 	i++;
 	// i++;
-	while (s[i] && s[i] != ' ' && s[i] != '\t' && s[i] != '\n')
+	while (s[i] && s[i] != ' ' && s[i] != '\t' && s[i] != '\n' && s[i] != '$')
 		i++;
 	ret = malloc(i + 1);
 	i = 0;
-	while (s[i] && s[i] != ' ' && s[i] != '\t' && s[i] != '\n')
+	while (s[i] && s[i] != ' ' && s[i] != '\t' && s[i] != '\n' && s[i] != '$')
 	{
 		ret[i] = s[i];
 		i++;
@@ -207,35 +206,35 @@ char	*check_env(char *line, char **env)
 char	*expand(char *line, t_args arg)
 {
 	int		dollar_ind;
-	int 	to_free;
 	int 	start;
-	char	*new;
+	char	*until_dlr;
 	char	*ret;
 	char	*tmp;
-	char	*free_str;
+	char	*to_free;
 
 	dollar_ind = find_dollar(line);
 	printf ("%d\n", dollar_ind);
 	if (dollar_ind == -1)
 		return (line);
-	to_free = ft_strlen(line);
+	
+	to_free = line;
 	start = 0;
 	ret = "";
 	while (dollar_ind != -1)
 	{
-		new = ft_substr(line, start, dollar_ind);
-		printf ("new do dollara: '%s'\n", new);;
+		until_dlr = ft_substr(line, start, dollar_ind);
+		//printf ("until_dlr do dollara: '%s'\n", until_dlr);;
 		tmp = until_whitespc(line + dollar_ind + 1);
-		printf ("tmp do whitespc: '%s'\n", tmp);
-		free_str = new;
-		ret = ft_strjoin(ret, new);
+		//printf ("tmp do whitespc: '%s'\n", tmp);
+		ret = ft_strjoin(ret, until_dlr);
 		ret = ft_strjoin(ret, check_env(tmp, arg.envp));
 		line += dollar_ind + ft_strlen(tmp) + 1;
-		// new = ft_strjoin(new, line);
-		printf ("new return str: %s\n", ret);
+		// until_dlr = ft_strjoin(until_dlr, line);
+		printf ("until_dlr return str: %s\n", ret);
 		dollar_ind = find_dollar(line);
 	}
 	ret = ft_strjoin(ret, line);
+	free(to_free);
 	printf ("final return str: '%s'\n", ret);
 	return (ret);
 }

@@ -14,9 +14,6 @@
 
 void	to_direct(t_args arg, int ac, int *p)
 {
-	int	i;
-
-	i = -1;
 	if (ac == 2)
 	{
 		err_pipe(dup2(arg.fdin, STDIN_FILENO) == -1, p, arg);
@@ -67,7 +64,6 @@ void	childs(t_args arg, char **paths, int ac, int *p)
 	if (cpid == 0)
 	{
 		to_direct(arg, ac, p);
-		free_2d(paths);
 		execve(*args, args, arg.envp);
 		ft_putstr_fd ("Command not found\n", STDERR_FILENO);
 		exit (1);
