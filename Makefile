@@ -10,9 +10,9 @@ FILES	=	pipex.c \
 			paths.c \
 			childs.c \
 			here_doc.c \
-			close_and_free.c \
 			expand.c \
-			expand_funcs.c 
+			expand_funcs.c \
+			close_and_free.c 
 
 LIB		=	./libft
 
@@ -33,7 +33,7 @@ $(NAME): $(OBJS)
 	$(CC) $(OBJS) $(CFLAGS) $(f) $(IFLAGS) $(LFLAGS) -o $(NAME)
 
 clean: libs
-	rm -f *.o
+	rm -f $(OBJS)
 
 fclean: clean
 	rm -f $(NAME)
