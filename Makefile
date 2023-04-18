@@ -6,7 +6,9 @@ f		=	-fsanitize=address -g
 
 DEP		=	Makefile pipex.h
 
-FILES	=	pipex.c \
+OBJDIR	=	./obj
+
+SRCS	=	pipex.c \
 			paths.c \
 			expand.c \
 			here_doc.c \
@@ -22,7 +24,7 @@ IFLAGS	=	-I$(LIB) -I$(PLIB) -I.
 
 LFLAGS	=	-L$(PLIB) -lftprintf -L$(LIB) -lft
 
-OBJS	=	$(FILES:.c=.o)
+OBJS	=	$(SRCS:%.c=$(OBJDIR)/%.o)
 
 CMD		=	$(MAKECMDGOALS)
 
@@ -30,16 +32,19 @@ ifeq ($(MAKECMDGOALS), bonus)
 	CMD = all
 endif
 
-all: libs $(NAME)
+all: objdir libs $(NAME)
 
-%.o: %.c $(DEP)
+objdir:
+	mkdir -p $(OBJDIR)
+
+$(OBJDIR)/%.o: %.c $(DEP)
 	$(CC) $(CFLAGS) $(f) $(IFLAGS) -c $< -o $@
 
 $(NAME): $(OBJS)
 	$(CC) $(OBJS) $(CFLAGS) $(f) $(IFLAGS) $(LFLAGS) -o $(NAME)
 
 clean: libs
-	rm -f $(OBJS)
+	rm -rf $(OBJDIR)
 
 fclean: clean
 	rm -f $(NAME)

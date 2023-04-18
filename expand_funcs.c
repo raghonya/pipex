@@ -76,13 +76,13 @@ char	*until_whitespc(char *s)
 	int		i;
 
 	i = 0;
-	while (s[i] && s[i] != ' ' && s[i] != '\t' && s[i] != '\n' && s[i] != '$')
+	while (s[i] && ft_isspace(s[i]) && s[i] != '$')
 		i++;
 	ret = malloc(sizeof(char) * (i + 1));
 	if (!ret)
 		return (ret);
 	i = 0;
-	while (s[i] && s[i] != ' ' && s[i] != '\t' && s[i] != '\n' && s[i] != '$')
+	while (s[i] && ft_isspace(s[i]) && s[i] != '$')
 	{
 		ret[i] = s[i];
 		i++;

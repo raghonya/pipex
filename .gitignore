@@ -4,8 +4,8 @@ pipex
 a
 b
 # Object files
+obj
 *.o
-*.ko
 *.obj
 *.elf
 
