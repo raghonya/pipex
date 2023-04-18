@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expand_funcs.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: raghonya <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/04/18 20:12:07 by raghonya          #+#    #+#             */
+/*   Updated: 2023/04/18 20:12:08 by raghonya         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <pipex.h>
 
 char	*until_eq(char *s)
@@ -8,7 +20,9 @@ char	*until_eq(char *s)
 	i = 0;
 	while (s[i] != '=')
 		i++;
-	ret = malloc(i + 1);
+	ret = malloc(sizeof(char) * (i + 1));
+	if (!ret)
+		return (ret);
 	i = 0;
 	while (*s != '=')
 		ret[i++] = *s++;
@@ -64,7 +78,9 @@ char	*until_whitespc(char *s)
 	i = 0;
 	while (s[i] && s[i] != ' ' && s[i] != '\t' && s[i] != '\n' && s[i] != '$')
 		i++;
-	ret = malloc(i + 1);
+	ret = malloc(sizeof(char) * (i + 1));
+	if (!ret)
+		return (ret);
 	i = 0;
 	while (s[i] && s[i] != ' ' && s[i] != '\t' && s[i] != '\n' && s[i] != '$')
 	{

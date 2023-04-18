@@ -71,7 +71,7 @@ void	childs(t_args arg, char **paths, int ac, int *p)
 	free_2d(args);
 }
 
-void	pipes(t_args arg, char **paths)
+void	multipipes(t_args arg, char **paths)
 {
 	int		*pipefd;
 	int		ac;

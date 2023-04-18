@@ -34,6 +34,7 @@ typedef struct s_strs
 	char	*until_dlr;
 	char	*tmp;
 	char	*to_free;
+	char	*ret;
 }	t_strs;
 
 void	free_2d(char **s);
@@ -48,7 +49,7 @@ char	*path_check(char **paths, char *cmd);
 
 void	find_absolute_path(char **args, char **paths);
 
-void	pipes(t_args arg, char **paths);
+void	multipipes(t_args arg, char **paths);
 
 void	here_doc(t_args arg, char **paths);
 

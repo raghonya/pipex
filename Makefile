@@ -8,9 +8,9 @@ DEP		=	Makefile pipex.h
 
 FILES	=	pipex.c \
 			paths.c \
-			childs.c \
-			here_doc.c \
 			expand.c \
+			here_doc.c \
+			multipipes.c \
 			expand_funcs.c \
 			close_and_free.c 
 

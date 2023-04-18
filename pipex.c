@@ -32,7 +32,7 @@ int	main(int argc, char **argv, char **envp)
 		arg.fdin = open (arg.argv[1], O_RDONLY);
 		arg.fdout = open (arg.argv[arg.argc - 1], O_CREAT \
 			| O_TRUNC | O_WRONLY, 0644);
-		pipes(arg, paths);
+		multipipes(arg, paths);
 	}
 	while (wait(NULL) != -1)
 		;
