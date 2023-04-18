@@ -91,7 +91,8 @@ void	here_doc(t_args arg, char **paths)
 		line = get_next_line(0);
 		if (!line || !ft_strcmp(line, limiter))
 			break ;
-		line = expand(line, arg);
+		line = expand(line, arg, pipefd);
+		printf ("final line: %s\n", line);
 		write (pipefd[1], line, ft_strlen(line));
 		free(line);
 	}

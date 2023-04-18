@@ -52,7 +52,7 @@ void	pipes(t_args arg, char **paths);
 
 void	here_doc(t_args arg, char **paths);
 
-char	*expand(char *line, t_args arg);
+char	*expand(char *line, t_args arg, int *pipes);
 
 char	*strjoin_w_free(char*s1, char *s2);
 

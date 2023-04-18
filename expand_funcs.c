@@ -41,7 +41,9 @@ char	*strjoin_w_free(char*s1, char *s2)
 	k = 0;
 	len1 = ft_strlen(s1);
 	len2 = ft_strlen(s2);
-	s = malloc (len1 + len2 + 1);
+	s = malloc (sizeof(char) * (len1 + len2 + 1));
+	if (!s)
+		return (s);
 	while (++i < (int)(len1 + len2))
 	{
 		if (i < (int)len1)
@@ -76,9 +78,11 @@ char	*until_whitespc(char *s)
 char	*check_env(char *line, char **env)
 {
 	char	*tmp;
-	int	i;
+	int		i;
 
 	i = 0;
+	if (!*line)
+		return ("$");
 	while (env[i])
 	{
 		tmp = until_eq(env[i]);
