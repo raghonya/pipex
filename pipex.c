@@ -24,16 +24,10 @@ int	main(int argc, char **argv, char **envp)
 		return (0);
 	paths = paths_finder(envp);
 	err_pipe(!paths || !*paths, NULL, arg);
-	if (argc > 5 && ft_strlen(argv[1]) == 8 \
-		&& !ft_strncmp(argv[1], "here_doc", 8))
+	if (argc > 5 && !ft_strcmp(argv[1], "here_doc"))
 		here_doc(arg, paths);
 	else
-	{
-		arg.fdin = open (arg.argv[1], O_RDONLY);
-		arg.fdout = open (arg.argv[arg.argc - 1], O_CREAT \
-			| O_TRUNC | O_WRONLY, 0644);
 		multipipes(arg, paths);
-	}
 	while (wait(NULL) != -1)
 		;
 	free_2d(paths);

@@ -78,6 +78,9 @@ void	multipipes(t_args arg, char **paths)
 	int		i;
 
 	ac = 1;
+	arg.fdin = open (arg.argv[1], O_RDONLY);
+	arg.fdout = open (arg.argv[arg.argc - 1], O_CREAT \
+		| O_TRUNC | O_WRONLY, 0644);
 	pipefd = malloc(sizeof(int) * (arg.argc - 4) * 2);
 	err_pipe(!pipefd, NULL, arg);
 	i = -1;
