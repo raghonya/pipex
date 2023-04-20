@@ -57,8 +57,8 @@ char	*expand(char *line, t_args arg, int *pipes);
 
 char	*strjoin_w_free(char*s1, char *s2);
 
-char	*until_whitespc(char *s);
+char	*until_whitespc(char *s, int *length);
 
-char	*check_env(char *line, char **env);
+char	*check_env(char *line, char **env, int length);
 
 #endif

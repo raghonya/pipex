@@ -70,21 +70,35 @@ char	*strjoin_w_free(char*s1, char *s2)
 	return (s);
 }
 
-char	*until_whitespc(char *s)
+int	check_varname(char *s)
+{
+	while (*s && !ft_isspace(*s) && *s != '$')
+	{
+		if (!ft_isdigit(*s) && *s != '_' && !ft_isalpha(*s))
+			return (1);
+		s++;
+	}
+	return (0);
+}
+
+char	*until_whitespc(char *s, int *length)
 {
 	char	*ret;
 	int		i;
 
 	i = 0;
-	if (ft_isdigit(*s))
-		return (ft_strdup(""));
-	while (s[i] && ft_isspace(s[i]) && s[i] != '$')
+	while (s[i] && !ft_isspace(s[i]) && s[i] != '$')
 		i++;
+	if (ft_isdigit(*s) || check_varname(s))
+	{
+		*length = i;
+		return (ft_strdup(""));
+	}
 	ret = malloc(sizeof(char) * (i + 1));
 	if (!ret)
 		return (ret);
 	i = 0;
-	while (s[i] && ft_isspace(s[i]) && s[i] != '$')
+	while (s[i] && !ft_isspace(s[i]) && s[i] != '$')
 	{
 		ret[i] = s[i];
 		i++;
@@ -93,13 +107,13 @@ char	*until_whitespc(char *s)
 	return (ret);
 }
 
-char	*check_env(char *line, char **env)
+char	*check_env(char *line, char **env, int length)
 {
 	char	*tmp;
 	int		i;
 
 	i = 0;
-	if (!*line)
+	if (!*line && length == 0)
 		return ("$");
 	while (env[i])
 	{
