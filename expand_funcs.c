@@ -76,6 +76,8 @@ char	*until_whitespc(char *s)
 	int		i;
 
 	i = 0;
+	if (ft_isdigit(*s))
+		return (ft_strdup(""));
 	while (s[i] && ft_isspace(s[i]) && s[i] != '$')
 		i++;
 	ret = malloc(sizeof(char) * (i + 1));
