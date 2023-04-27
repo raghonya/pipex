@@ -38,9 +38,7 @@ void	create_line(char **line, t_args arg, t_strs *str, int *pipes)
 	{
 		length = 0;
 		str->until_dlr = ft_substr(*line, 0, dollar_ind);
-		// printf ("until dollar: %s\n", str->until_dlr);
 		str->tmp = until_whitespc(*line + dollar_ind + 1, &length);
-		// printf ("tmp: %s\n", str->tmp);
 		err_pipe (!str->tmp || !str->until_dlr, pipes, arg);
 		str->ret = strjoin_w_free(str->ret, str->until_dlr);
 		err_pipe (!str->ret, pipes, arg);
@@ -48,10 +46,8 @@ void	create_line(char **line, t_args arg, t_strs *str, int *pipes)
 			*line += dollar_ind + length + 1;
 		else
 			*line += dollar_ind + ft_strlen(str->tmp) + 1;
-			// printf ("%d\n,",  length);
 		str->ret = strjoin_w_free(str->ret, check_env(str->tmp, arg.envp, length));
 		err_pipe (!str->ret, pipes, arg);
-		// printf ("ret: %s\n", str->ret);
 		free(str->until_dlr);
 		free(str->tmp);
 		dollar_ind = find_dollar(*line);
@@ -72,6 +68,5 @@ char	*expand(char *line, t_args arg, int *pipes)
 	str.ret = NULL;
 	create_line(&line, arg, &str, pipes);
 	free(str.to_free);
-	printf ("ret: %s\n", str.ret);
 	return (str.ret);
 }

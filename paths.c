@@ -25,7 +25,7 @@ char	**paths_finder(char **envp)
 	j = 0;
 	while (envp[i][j] != '/')
 		j++;
-	return (ft_split(envp[i], ':'));
+	return (ft_split(envp[i] + j, ':'));
 }
 
 char	*path_check(char **paths, char *cmd)

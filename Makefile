@@ -35,7 +35,7 @@ endif
 all: objdir libs $(NAME)
 
 objdir:
-	mkdir -p $(OBJDIR)
+	@mkdir -p $(OBJDIR)
 
 $(OBJDIR)/%.o: %.c $(DEP)
 	$(CC) $(CFLAGS) $(f) $(IFLAGS) -c $< -o $@
