@@ -55,16 +55,10 @@ void	find_absolute_path(char **args, char **paths)
 	int		i;
 
 	i = -1;
-	if (*args)
+	if (*args && !ft_strchr(*args, '/'))
 	{
-		while ((*args)[++i])
-			if ((*args)[i] == '/')
-				break ;
-		if ((size_t)i == ft_strlen(*args))
-		{
-			tmp = ft_strjoin("/", *args);
-			free(*args);
-			*args = path_check(paths, tmp);
-		}
+		tmp = ft_strjoin("/", *args);
+		free(*args);
+		*args = path_check(paths, tmp);
 	}
 }
