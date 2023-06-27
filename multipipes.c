@@ -47,7 +47,8 @@ void	to_direct(t_args arg, int ac, int *p)
 
 	ac = 2, kardum a fd(a), talis p[ac - 1]
 	ac = [3...argc - 2], i = (ac - 3) * 2  ==>
-	==> kardum a p[i], talis p[i + 3]
+	==> kardum a p[i], talis p[i + 3]RFTE
+	
 
 */
 

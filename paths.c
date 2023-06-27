@@ -15,17 +15,13 @@
 char	**paths_finder(char **envp)
 {
 	int	i;
-	int	j;
 
 	i = 0;
 	while (envp[i] && ft_strncmp(envp[i], "PATH=", 5))
 		i++;
 	if (!envp[i])
 		return (NULL);
-	j = 0;
-	while (envp[i][j] != '/')
-		j++;
-	return (ft_split(envp[i] + j, ':'));
+	return (ft_split(envp[i] + 5, ':'));
 }
 
 char	*path_check(char **paths, char *cmd)
